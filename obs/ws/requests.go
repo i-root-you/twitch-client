@@ -4,11 +4,14 @@ import "errors"
 
 const (
 	// StatusOK indicates that the request was successful.
+	// TODO: Why strings and not iota? or bitslice? 
 	StatusOK = "ok"
 	// StatusError indicates that the request was unsuccessful.
 	StatusError = "error"
 )
 
+// TODO: I really don't like this global variable shit in every file. Go
+// programmers are annoying.
 var (
 	// ErrNotSent is returned when you call Receive on a request that has not been sent.
 	ErrNotSent = errors.New("request not yet sent")

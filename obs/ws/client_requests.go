@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// TODO: A short polling interval anda  global? :(
 const interval = time.Millisecond * 50
 
 var (

@@ -5,21 +5,27 @@ import (
 	"sync"
 	"time"
 
+	// TODO: And the Go Stdlib has websocket now ...
 	"github.com/gorilla/websocket"
+	// TODO: Have a feeling we will be able to get rid of this
 	"github.com/mitchellh/mapstructure"
 )
 
-const bufferSize = 100
 
-var (
-	receiveTimeout = time.Duration(0)
-	messageID      = 0
-	lock           = sync.Mutex{}
-)
+// TODO: Why not use and initialize a struct when its needed instead of just
+// using globals? 
 
 // Client is the interface to obs-websocket.
 // Client{Host: "localhost", Port: 4444} will probably work if you haven't configured OBS.
 type Client struct {
+	// TODO: Going to try to stuff these globals in this client struct, it may not
+	// prove correct later but it does seem like a ggenerally better strategy. 
+  bufferSize = 100
+	receiveTimeout = time.Duration(0)
+	messageID      = 0
+	lock           = sync.Mutex{}
+
+
 	Host           string                      // Host (probably "localhost").
 	Port           int                         // Port (OBS default is 4444).
 	Password       string                      // Password (OBS default is "").
@@ -32,10 +38,12 @@ type Client struct {
 
 // poll listens for responses/events.
 // This function blocks until Disconnect is called.
+// TODO: I'm not really happy with a short polling websocket client.  I'm I sure
+// there was not another Go based OBS client? 
 func (c *Client) poll() {
 	logger.Debug("started polling")
-
 	for c.connected {
+
 		m := make(map[string]interface{})
 		if err := c.conn.ReadJSON(&m); err != nil {
 			if !c.connected {
